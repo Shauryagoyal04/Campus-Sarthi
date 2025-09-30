@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus SARTHI Widget Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #667eea;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .code-block {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .code-block code {
+      color: #d63384;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      transition: background 0.3s;
+    }
+
+    .button:hover {
+      background: #5568d3;
+    }
+
+    .button.secondary {
+      background: #764ba2;
+    }
+
+    .button.secondary:hover {
+      background: #653a8b;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .feature-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 10px;
+      color: #667eea;
+    }
+
+    .feature-card p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #d4edda;
+      color: #155724;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Campus SARTHI Widget Demo</h1>
+    <p class="subtitle">Embeddable multilingual chatbot for campus support</p>
+
+    <div class="section">
+      <h2>Quick Start</h2>
+      <p>Add the following code to your website to embed the Campus SARTHI widget:</p>
+      
+      <div class="code-block">
+        <code>&lt;!-- Load the widget script --&gt;</code><br>
+        <code>&lt;script src="https://your-domain.com/widget-loader.js"&gt;&lt;/script&gt;</code><br><br>
+        <code>&lt;!-- Initialize the widget --&gt;</code><br>
+        <code>&lt;script&gt;</code><br>
+        <code>&nbsp;&nbsp;CampusSarthi.init({</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;host: 'https://your-domain.com',</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;apiKey: 'your-api-key',</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;defaultLang: 'en' // en, pa, te, bn</code><br>
+        <code>&nbsp;&nbsp;});</code><br>
+        <code>&lt;/script&gt;</code>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>🌍 Multilingual</h3>
+          <p>Support for English, Punjabi, Telugu, and Bengali with auto-detection</p>
+        </div>
+        <div class="feature-card">
+          <h3>🎤 Voice Input</h3>
+          <p>Ask questions using voice with Web Speech API integration</p>
+        </div>
+        <div class="feature-card">
+          <h3>📚 Source Citations</h3>
+          <p>All answers backed by verified campus documents with references</p>
+        </div>
+        <div class="feature-card">
+          <h3>🎯 Confidence Scores</h3>
+          <p>Color-coded confidence indicators for answer reliability</p>
+        </div>
+        <div class="feature-card">
+          <h3>👤 Human Escalation</h3>
+          <p>Easy escalation to human support when needed</p>
+        </div>
+        <div class="feature-card">
+          <h3>📱 Responsive</h3>
+          <p>Works seamlessly on desktop, tablet, and mobile devices</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Configuration Options</h2>
+      <div class="code-block">
+        <code>CampusSarthi.init({</code><br>
+        <code>&nbsp;&nbsp;host: 'https://your-domain.com',&nbsp;&nbsp;// Required: Your widget host</code><br>
+        <code>&nbsp;&nbsp;apiKey: 'your-api-key',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Required: Your API key</code><br>
+        <code>&nbsp;&nbsp;elId: 'custom-widget-id',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Optional: Custom element ID</code><br>
+        <code>&nbsp;&nbsp;defaultLang: 'en',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Optional: en, pa, te, bn</code><br>
+        <code>&nbsp;&nbsp;theme: 'light',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Optional: light, dark</code><br>
+        <code>&nbsp;&nbsp;position: 'bottom-right'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Optional: bottom-right, bottom-left, etc.</code><br>
+        <code>});</code>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>API Methods</h2>
+      <div class="code-block">
+        <code>// Destroy a widget instance</code><br>
+        <code>CampusSarthi.destroy('widget-id');</code><br><br>
+        <code>// Get all active instances</code><br>
+        <code>const instances = CampusSarthi.getInstances();</code><br><br>
+        <code>// Update widget configuration</code><br>
+        <code>CampusSarthi.updateConfig('widget-id', { defaultLang: 'pa' });</code><br><br>
+        <code>// Check version</code><br>
+        <code>console.log(CampusSarthi.version);</code>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Try It Now</h2>
+      <p>The widget is already loaded on this page. Click the chat button in the bottom-right corner to start chatting!</p>
+      <button class="button" onclick="testWidget()">Test Widget</button>
+      <button class="button secondary" onclick="changeLanguage()">Change Language</button>
+      <span class="status">Widget Active</span>
+    </div>
+
+    <div class="section">
+      <h2>Events</h2>
+      <p>Listen to custom events from the widget:</p>
+      <div class="code-block">
+        <code>// Listen for widget events</code><br>
+        <code>window.addEventListener('campusSarthi:messageReceived', (event) => {</code><br>
+        <code>&nbsp;&nbsp;console.log('Message received:', event.detail);</code><br>
+        <code>});</code><br><br>
+        <code>window.addEventListener('campusSarthi:escalated', (event) => {</code><br>
+        <code>&nbsp;&nbsp;console.log('Escalated to human:', event.detail);</code><br>
+        <code>});</code>
+      </div>
+    </div>
+  </div>
+
+   Load the Campus SARTHI widget 
+  <script src="/widget-loader.js"></script>
+  <script>
+    // Initialize the widget
+    CampusSarthi.init({
+      host: window.location.origin,
+      apiKey: 'demo-api-key',
+      defaultLang: 'en'
+    });
+
+    function testWidget() {
+      alert('Widget is active! Click the chat button in the bottom-right corner.');
+    }
+
+    function changeLanguage() {
+      const languages = ['en', 'pa', 'te', 'bn'];
+      const currentLang = CampusSarthi.getInstances()[0]?.config?.defaultLang || 'en';
+      const currentIndex = languages.indexOf(currentLang);
+      const nextLang = languages[(currentIndex + 1) % languages.length];
+      
+      CampusSarthi.updateConfig(
+        CampusSarthi.getInstances()[0].id,
+        { defaultLang: nextLang }
+      );
+      
+      alert(`Language changed to: ${nextLang}`);
+    }
+
+    // Listen for custom events
+    window.addEventListener('campusSarthi:messageReceived', (event) => {
+      console.log('Message received:', event.detail);
+    });
+  </script>
+</body>
+</html>
