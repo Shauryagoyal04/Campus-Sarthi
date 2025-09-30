@@ -2,21 +2,47 @@
 
 import type React from "react"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { isAuthenticated } from "@/lib/admin-auth"
 import { AdminLayout } from "@/components/admin/admin-layout"
 import { mockKPIData, mockChartData } from "@/lib/mock-data"
-import { TrendingUp, MessageSquare, AlertCircle, Users } from "lucide-react"
+import { pythonAPI } from "@/lib/python-api"
+import { APIDebugger } from "@/components/admin/api-debugger"
+import { TrendingUp, MessageSquare, AlertCircle, Users, FileText, Database, Building, Calendar } from "lucide-react"
 
 export default function AdminDashboardPage() {
   const router = useRouter()
+  const [pythonStats, setPythonStats] = useState<any>(null)
+  const [isLoadingStats, setIsLoadingStats] = useState(true)
+  const [apiHealth, setApiHealth] = useState<boolean | null>(null)
 
   useEffect(() => {
     if (!isAuthenticated()) {
       router.push("/admin/login")
+    } else {
+      loadPythonStats()
     }
   }, [router])
+
+  const loadPythonStats = async () => {
+    try {
+      // Check API health
+      const health = await pythonAPI.healthCheck()
+      setApiHealth(health)
+      
+      if (health) {
+        // Load document statistics
+        const stats = await pythonAPI.getDocumentStats()
+        setPythonStats(stats)
+      }
+    } catch (error) {
+      console.error("Failed to load Python API stats:", error)
+      setApiHealth(false)
+    } finally {
+      setIsLoadingStats(false)
+    }
+  }
 
   if (!isAuthenticated()) return null
 
@@ -28,33 +54,132 @@ export default function AdminDashboardPage() {
           <p className="text-muted-foreground">Overview of Campus SARTHI performance</p>
         </div>
 
+        {/* API Health Status */}
+        {apiHealth !== null && (
+          <div className={`p-4 rounded-lg border ${apiHealth ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${apiHealth ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className="font-medium">
+                Python API Status: {apiHealth ? 'Online' : 'Offline'}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KPICard
-            title="Total Queries"
-            value={mockKPIData.totalQueries.toLocaleString()}
-            icon={<MessageSquare className="w-5 h-5" />}
-            trend="+12%"
-          />
-          <KPICard
-            title="Avg Confidence"
-            value={`${mockKPIData.avgConfidence}%`}
-            icon={<TrendingUp className="w-5 h-5" />}
-            trend="+5%"
-          />
-          <KPICard
-            title="Escalations"
-            value={mockKPIData.escalations.toString()}
-            icon={<AlertCircle className="w-5 h-5" />}
-            trend="-8%"
-          />
-          <KPICard
-            title="Active Users"
-            value={mockKPIData.activeUsers.toString()}
-            icon={<Users className="w-5 h-5" />}
-            trend="+23%"
-          />
+          {/* Python API Stats */}
+          {pythonStats && apiHealth ? (
+            <>
+              <KPICard
+                title="Total Documents"
+                value={pythonStats.total_documents?.toString() || "0"}
+                icon={<FileText className="w-5 h-5" />}
+                trend=""
+              />
+              <KPICard
+                title="Total Chunks"
+                value={pythonStats.total_chunks?.toString() || "0"}
+                icon={<Database className="w-5 h-5" />}
+                trend=""
+              />
+              <KPICard
+                title="Branches"
+                value={Object.keys(pythonStats.documents_by_branch || {}).length.toString()}
+                icon={<Building className="w-5 h-5" />}
+                trend=""
+              />
+              <KPICard
+                title="Years Covered"
+                value={Object.keys(pythonStats.documents_by_year || {}).length.toString()}
+                icon={<Calendar className="w-5 h-5" />}
+                trend=""
+              />
+            </>
+          ) : (
+            <>
+              <KPICard
+                title="Total Queries"
+                value={mockKPIData.totalQueries.toLocaleString()}
+                icon={<MessageSquare className="w-5 h-5" />}
+                trend="+12%"
+              />
+              <KPICard
+                title="Avg Confidence"
+                value={`${mockKPIData.avgConfidence}%`}
+                icon={<TrendingUp className="w-5 h-5" />}
+                trend="+5%"
+              />
+              <KPICard
+                title="Escalations"
+                value={mockKPIData.escalations.toString()}
+                icon={<AlertCircle className="w-5 h-5" />}
+                trend="-8%"
+              />
+              <KPICard
+                title="Active Users"
+                value={mockKPIData.activeUsers.toString()}
+                icon={<Users className="w-5 h-5" />}
+                trend="+23%"
+              />
+            </>
+          )}
         </div>
+
+        {/* Python API Statistics */}
+        {pythonStats && apiHealth && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h2 className="text-lg font-semibold mb-4">Documents by Branch</h2>
+              <div className="space-y-2">
+                {Object.entries(pythonStats.documents_by_branch || {}).map(([branch, count]) => {
+                  const numCount = Number(count) || 0;
+                  const maxCount = Math.max(...Object.values(pythonStats.documents_by_branch || {}).map(v => Number(v) || 0));
+                  return (
+                    <div key={branch} className="flex items-center gap-3">
+                      <span className="text-sm text-muted-foreground w-20 capitalize">{branch}</span>
+                      <div className="flex-1 bg-muted rounded-full h-6 overflow-hidden">
+                        <div
+                          className="bg-primary h-full flex items-center justify-end pr-2"
+                          style={{ 
+                            width: `${Math.max(10, (numCount / maxCount * 100))}%` 
+                          }}
+                        >
+                          <span className="text-xs text-primary-foreground font-medium">{numCount}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h2 className="text-lg font-semibold mb-4">Documents by Year</h2>
+              <div className="space-y-2">
+                {Object.entries(pythonStats.documents_by_year || {}).map(([year, count]) => {
+                  const numCount = Number(count) || 0;
+                  const maxCount = Math.max(...Object.values(pythonStats.documents_by_year || {}).map(v => Number(v) || 0));
+                  return (
+                    <div key={year} className="flex items-center gap-3">
+                      <span className="text-sm text-muted-foreground w-20">{year}</span>
+                      <div className="flex-1 bg-muted rounded-full h-6 overflow-hidden">
+                        <div
+                          className="bg-chart-2 h-full flex items-center justify-end pr-2"
+                          style={{ 
+                            width: `${Math.max(10, (numCount / maxCount * 100))}%` 
+                          }}
+                        >
+                          <span className="text-xs text-white font-medium">{numCount}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -96,6 +221,9 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* API Debug Panel - Remove in production */}
+        <APIDebugger />
 
         {/* Recent Activity */}
         <div className="bg-card border border-border rounded-lg p-6">

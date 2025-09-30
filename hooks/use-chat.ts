@@ -33,7 +33,9 @@ export function useChat(language: string) {
           modality: audioUrl ? "voice" : "text",
         }
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/query`, {
+        // Get the current origin for API calls
+        const apiUrl = process.env.NEXT_PUBLIC_API_HOST || window.location.origin
+        const response = await fetch(`${apiUrl}/api/query`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(request),

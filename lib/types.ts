@@ -23,6 +23,58 @@ export interface ChatSession {
   language: string
 }
 
+// Python API Request Types
+export interface PythonQueryRequest {
+  query: string
+  branch?: string
+  year?: string
+  top_k?: number
+}
+
+export interface PythonQueryResponse {
+  answer: string
+  query: string
+  branch: string
+  year: string
+  timestamp: string
+  context_used: number
+}
+
+export interface DocumentUploadRequest {
+  file: File
+  doc_name: string
+  branch?: string
+  year?: string
+  valid_from?: string
+  valid_to?: string
+}
+
+export interface DocumentUploadResponse {
+  message: string
+  doc_name: string
+  chunks_processed: number
+  branch: string
+  year: string
+  doc_id: string
+}
+
+export interface SimilarDocument {
+  content: string
+  doc_name: string
+  branch: string
+  year: string
+  similarity: number
+  valid_from?: string
+  valid_to?: string
+}
+
+export interface SearchResponse {
+  documents: SimilarDocument[]
+  total_found: number
+  query_embedding_success: boolean
+}
+
+// Legacy types for compatibility
 export interface QueryRequest {
   sessionId?: string
   text?: string

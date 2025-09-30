@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { LayoutDashboard, FileText, MessageSquare, Users, Settings, LogOut, Menu, X } from "lucide-react"
 import { clearAdminToken } from "@/lib/admin-auth"
+import { APIHealthMonitor } from "./api-health-monitor"
 import { useState } from "react"
 
 const navigation = [
@@ -72,6 +73,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               )
             })}
           </nav>
+
+          {/* API Health Monitor */}
+          <div className="p-4 border-t border-border">
+            <APIHealthMonitor />
+          </div>
 
           {/* Logout */}
           <div className="p-4 border-t border-border">
