@@ -103,7 +103,7 @@ export function ChatWidget({ translations, initialLanguage }: ChatWidgetProps) {
                   disabled={isLoading}
                   placeholder={translations.chat.placeholder}
                   language={language}
-                  enableVoice={process.env.NEXT_PUBLIC_ENABLE_VOICE === "true"}
+                  enableVoice={true}
                   enableFileUpload={process.env.NEXT_PUBLIC_ENABLE_FILE_UPLOAD === "true"}
                 />
               </>
